@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Headlines</title>
-</head>
-<body>
-    <h1>Headlines</h1>
-    <b>title</b><br>
-    <em>published</em><br>
-    <p>summary</p>
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <title>Headlines</title>
+    </head>
+    <body>
+        <h1>Headlines</h1>
+        {% for article in articles %}
+        <strong>{{article.title | safe}}</strong><br>
+        <em>{{article.published | safe}}</em><br>
+        <p>{{article.summary | safe}}</p>
+        <hr />
+        {% endfor %}
+    </body>
 </html>
