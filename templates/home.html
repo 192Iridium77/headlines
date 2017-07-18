@@ -7,7 +7,7 @@
     <body>
         <h1>Headlines</h1>
         {% for article in articles %}
-        <strong>{{article.title | safe}}</strong><br>
+        <strong><a href="{{article.link | safe}}">{{article.title | safe}}</a></strong><br>
         <em>{{article.published | safe}}</em><br>
         <p>{{article.summary | safe}}</p>
         <hr />
