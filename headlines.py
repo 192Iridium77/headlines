@@ -12,11 +12,11 @@ RSS_FEEDS = {'sciam': 'http://rss.sciam.com/ScientificAmerican-Global?format=xml
 
 @app.route('/')
 @app.route("/<publication>")
-def get_news(publication="sciam"):
+def get_news(publication="newatlas"):
     feed = feedparser.parse(RSS_FEEDS[publication])
     first_article = feed['entries'][0]
 
-    return render_template("home.html", article=first_article)
+    return render_template("home.html", articles=feed['entries'])
 
 
 if __name__ == '__main__':
