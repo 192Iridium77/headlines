@@ -14,25 +14,42 @@ RSS_FEEDS = {'sciam': 'http://rss.sciam.com/ScientificAmerican-Global?format=xml
              'realclear': 'http://www.realclearscience.com/index.xml',
              'livescience': 'http://www.livescience.com/home/feed/site.xml'}
 
+DEFAULTS = {'publication':'newatlas',
+            'city': 'Adelaide,AU'}
+
 
 @app.route('/')
-def get_news():
-    query = request.args.get("publication")
+def home():
+    # get customized headlines, based on user input or default
+    publication = request.args.get('publication')
+    if not publication:
+        publication = DEFAULTS['publication']
+    articles = get_news(publication)
+    # get customized weather data
+    city = request.args.get('city')
+    if not city:
+        city = DEFAULTS['city']
+    weather = get_weather(city)
+
+    return render_template("home.html", articles=articles, weather=weather)
+
+
+def get_news(query):
     if not query or query.lower() not in RSS_FEEDS:
-        publication = "newatlas"
+        publication = DEFAULTS["publication"]
     else:
         publication = query.lower()
     feed = feedparser.parse(RSS_FEEDS[publication])
-    weather = get_weather("Adelaide,AU")
 
-    return render_template("home.html", articles=feed['entries'], weather=weather)
+    return feed['entries']
+
 
 
 def get_weather(query):
     api_url = "http://api.openweathermap.org/data/2.5/weather?q={}&units=metric&appid=83eeda99c5495de62d6086f706f7f1bf"
     query = urllib.parse.quote(query)
     url = api_url.format(query)
-    data = urlopen(url).read()
+    data = urlopen(url).read().decode('utf-8')
     parsed = json.loads(data)
     weather = None
     if parsed.get("weather"):
