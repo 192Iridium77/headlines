@@ -1,2 +1,2 @@
 # headlines
-Some kind of news stories website, idk
+This is an RSS feeds website for science news, it has been made with Flask and Jinja
