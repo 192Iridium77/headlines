@@ -15,7 +15,12 @@ RSS_FEEDS = {'sciam': 'http://rss.sciam.com/ScientificAmerican-Global?format=xml
              'livescience': 'http://www.livescience.com/home/feed/site.xml'}
 
 DEFAULTS = {'publication':'newatlas',
-            'city': 'Adelaide,AU'}
+            'city': 'Adelaide,AU',
+            'currency_from':'AUD',
+            'currency_to':'USD'}
+
+WEATHER_URL = "http://api.openweathermap.org/data/2.5/weather?q={}&units=metric&appid=83eeda99c5495de62d6086f706f7f1bf"
+CURRENCY_URL = "https://openexchangerates.org//api/latest.json?app_id=bc76ca2f0901456faf42a2fdaded3e99"
 
 
 @app.route('/')
@@ -30,8 +35,17 @@ def home():
     if not city:
         city = DEFAULTS['city']
     weather = get_weather(city)
+    # get customized currency exchange data
+    currency_from = request.args.get("currency_from")
+    if not currency_from:
+        currency_from = DEFAULTS['currency_from']
+    currency_to = request.args.get("currency_to")
+    if not currency_to:
+        currency_to = DEFAULTS['currency_to']
+    rate = get_rate(currency_from, currency_to)
 
-    return render_template("home.html", articles=articles, weather=weather)
+    return render_template("home.html", articles=articles, weather=weather, currency_from=currency_from
+                           , currency_to=currency_to, rate=rate)
 
 
 def get_news(query):
@@ -44,9 +58,8 @@ def get_news(query):
     return feed['entries']
 
 
-
 def get_weather(query):
-    api_url = "http://api.openweathermap.org/data/2.5/weather?q={}&units=metric&appid=83eeda99c5495de62d6086f706f7f1bf"
+    api_url = WEATHER_URL
     query = urllib.parse.quote(query)
     url = api_url.format(query)
     data = urlopen(url).read().decode('utf-8')
@@ -59,6 +72,16 @@ def get_weather(query):
                    "country":parsed['sys']['country']
         }
     return weather
+
+
+def get_rate(frm, to):
+    all_currency = urlopen(CURRENCY_URL).read().decode("utf-8")
+
+    parsed = json.loads(all_currency).get('rates')
+    frm_rate = parsed.get(frm.upper())
+    to_rate = parsed.get(to.upper())
+
+    return to_rate / frm_rate
 
 
 if __name__ == '__main__':
