@@ -7,7 +7,12 @@
     <body>
         <h1>Headlines</h1>
         <form>
-            <input type="text" name="publication" placeholder="search" />
+            <select name="publication">
+                <option value="sciam">Scientific American</option>
+                <option value="newatlas">New Atlas</option>
+                <option value="realclear">Real Clear Science</option>
+                <option value="livescience">Live Science</option>
+            </select>
             <input type="submit" value="Submit" />
         </form><br>
         <h2>Weather</h2>
@@ -22,13 +27,15 @@
             from:
             <select name="currency_from">
                 {% for currency in currencies %}
-                    <option value="{{currency}}">{{currency}}</option>
+                    <option value="{{currency}}">
+                {{currency}}</option>
                 {% endfor %}
             </select>
             to:
             <select name="currency_to">
                 {% for currency in currencies %}
-                    <option value="{{currency}}">{{currency}}</option>
+                    <option value="{{currency}}">
+                        {{currency}}</option>
                 {% endfor %}
             </select>
             <input type="submit" value="Submit">
