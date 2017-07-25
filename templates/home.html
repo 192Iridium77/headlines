@@ -3,8 +3,11 @@
     <head>
         <meta charset="UTF-8">
         <title>Headlines</title>
+        <link rel="stylesheet" type="text/css" href="../static/css/style.css">
     </head>
     <body>
+    <div id="header">
+        <div id="inner-header">
         <h1>Headlines</h1>
         <form>
             <select name="publication">
@@ -41,11 +44,14 @@
             <input type="submit" value="Submit">
         </form>
         <p>1.00 {{currency_from}} = {{currency_to}} {{rate}}</p><br>
+        <hr />
+        </div>
         {% for article in articles %}
         <strong><a href="{{article.link | safe}}">{{article.title | safe}}</a></strong><br>
         <em>{{article.published | safe}}</em><br>
         <p>{{article.summary | safe}}</p>
         <hr />
         {% endfor %}
+    </div>
     </body>
 </html>
